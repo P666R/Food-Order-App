@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { CreateVendorInput } from '../dto';
 import { Vendor } from '../models';
+import { GenerateSalt, GeneratePassword } from '../utility';
 
 export const CreateVendor = async (
   req: Request,
@@ -18,16 +19,26 @@ export const CreateVendor = async (
     phone,
   } = <CreateVendorInput>req.body;
 
+  const existingVendor = await Vendor.findOne({ email });
+
+  if (existingVendor) {
+    return res.json({ message: 'Vendor already exists with this email ID' });
+  }
+
+  const salt = await GenerateSalt();
+
+  const hashedPassword = await GeneratePassword(password, salt);
+
   const createdVendor = await Vendor.create({
-    name: name,
-    ownerName: ownerName,
-    foodType: foodType,
-    pincode: pincode,
-    address: address,
-    phone: phone,
-    email: email,
-    password: password,
-    salt: 'x',
+    name,
+    ownerName,
+    foodType,
+    pincode,
+    address,
+    phone,
+    email,
+    password: hashedPassword,
+    salt,
     serviceAvailable: false,
     coverImages: ['1'],
     rating: 1,
@@ -40,7 +51,11 @@ export const GetVendors = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
+) => {
+  const vendors = await Vendor.find();
+
+  return res.json(vendors);
+};
 
 export const GetVendorByID = async (
   req: Request,

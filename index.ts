@@ -13,14 +13,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/admin', AdminRoute);
 app.use('/vendor', VendorRoute);
 
-mongoose
-  .connect(MONGO_URI as string)
-  .then(() => {
-    console.log('connected to mongo');
-  })
-  .catch((err) => console.log('mongo error: ', err));
+const startServer = async () => {
+  try {
+    await mongoose.connect(MONGO_URI as string);
+    console.log('MongoDB connected');
+    app.listen(8000, () => {
+      // console.clear();
+      console.log('App listening on port 8000');
+    });
+  } catch (err) {
+    console.log('mongo error: ', err);
+  }
+};
 
-app.listen(8000, () => {
-  console.clear();
-  console.log('App listening on port 8000');
-});
+startServer();
