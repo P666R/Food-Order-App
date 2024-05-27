@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { CreateVendorInput } from '../dto';
+import { Vendor } from '../models';
 
 export const CreateVendor = async (
   req: Request,
@@ -17,16 +18,22 @@ export const CreateVendor = async (
     phone,
   } = <CreateVendorInput>req.body;
 
-  return res.json({
-    name,
-    address,
-    pincode,
-    foodType,
-    email,
-    password,
-    ownerName,
-    phone,
+  const createdVendor = await Vendor.create({
+    name: name,
+    ownerName: ownerName,
+    foodType: foodType,
+    pincode: pincode,
+    address: address,
+    phone: phone,
+    email: email,
+    password: password,
+    salt: 'x',
+    serviceAvailable: false,
+    coverImages: ['1'],
+    rating: 1,
   });
+
+  return res.json(createdVendor);
 };
 
 export const GetVendors = async (

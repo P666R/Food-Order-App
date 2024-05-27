@@ -3,7 +3,7 @@
 export interface CreateVendorInput {
   name: string;
   ownerName: string;
-  foodType: [string];
+  foodType: string[];
   pincode: string;
   address: string;
   phone: string;
@@ -15,7 +15,7 @@ export interface EditVendorInput {
   name: string;
   address: string;
   phone: string;
-  foodType: [string];
+  foodType: string[];
 }
 
 export interface VendorLoginInput {
@@ -31,7 +31,7 @@ export interface VendorPayload {
 
 export interface CreateOfferInputs {
   offerType: string;
-  vendors: [any];
+  vendors: any[];
   title: string;
   description: string;
   minValue: number;
@@ -40,8 +40,8 @@ export interface CreateOfferInputs {
   endValidity: Date;
   promoCode: string;
   promoType: string;
-  bank: [any];
-  bins: [any];
+  bank: any[];
+  bins: any[];
   pincode: string;
   isActive: boolean;
 }
